@@ -6,13 +6,6 @@ express = require 'express'
 
 app = express()
 
-app.all('*', (req, res, next) ->
-  res.header "Access-Control-Allow-Origin", "*"
-  res.header "Access-Control-Allow-Headers", "X-Requested-With"
-  #'Access-Control-Allow-Methods', 'PUT, GET, POST, DELETE, OPTIONS'
-  next()
-)
-
 T = new Twit {
   consumer_key:         'Z2lf3HcjTwaOFmynyt5cgQ'
   consumer_secret:      'FRCfnAScX3Yg6YmcQmHKeoXJTRxZV82v69scKf4jCHQ'
@@ -32,21 +25,20 @@ getSentiment = (tweet, done) ->
 
 getTweets = (q, callback) ->
   all = []
-  sinceId = null
-  count = 2
+  count = 4
   q.count = 100
   async.whilst( 
     -> count > 0
     (done) ->
-      console.log "Iteration #{count}"
+      console.log "Twitter loop iteration #{count}"
       count--
-      q.sinceId= sinceId if sinceId
       T.get 'statuses/user_timeline', q, (err, tweets) ->
         all = all.concat(tweets)
+        q.max_id = _.last(tweets).id if tweets
         done(err)
     (err) ->
       console.log "Grabbed: #{all.length}"
-      callback err, _.map(all, (t) -> _.pick t, ['text', 'user', 'id'])
+      callback err, _.map(all, (t) -> _.pick t, ['text', 'id'])
   )
 
 app.get '/api/:user', (req, res) ->
