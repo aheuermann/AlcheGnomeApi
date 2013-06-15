@@ -25,16 +25,20 @@ getSentiment = (tweet, done) ->
 
 getTweets = (q, callback) ->
   all = []
-  count = 4
+  count = 6
   q.count = 100
   async.whilst( 
     -> count > 0
     (done) ->
       console.log "Twitter loop iteration #{count}"
-      count--
       T.get 'statuses/user_timeline', q, (err, tweets) ->
-        all = all.concat(tweets)
-        q.max_id = _.last(tweets).id if tweets
+        if tweets and tweets.length > 0
+          all = all.concat(tweets)
+          q.max_id = _.last(tweets).id if tweets
+          count--
+        else 
+          count = 0
+
         done(err)
     (err) ->
       console.log "Grabbed: #{all.length}"
