@@ -13,7 +13,7 @@ T = new Twit {
   access_token_secret:  'GXIkzXP5GMi4XNfBlJCOq9W5e1YPyFfOkHybRFQOSY4'
 }
 
-alchemy = new AlchemyAPI('48d4b10b0009b09a9480bf64609620ff69c42dac')
+alchemy = new AlchemyAPI('8da86f0a977a22e600739f6f693b39fddefbd503')
 
 getSentiment = (tweet, done) ->
   if tweet?.text
@@ -42,10 +42,16 @@ getTweets = (q, callback) ->
         done(err)
     (err) ->
       console.log "Grabbed: #{all.length}"
-      callback err, _.map(all, (t) -> _.pick t, ['text', 'id'])
+      #i = 0;
+      callback err, _.map(all, (t) -> 
+        t = _.pick t, ['text', 'id']
+        #t.count = ++i
+        t
+      ) 
   )
 
 app.get '/api/:user', (req, res) ->
+  
   q = 
     screen_name: req.params.user
   
@@ -54,7 +60,7 @@ app.get '/api/:user', (req, res) ->
       getTweets q, next
     (tweets, next) -> #get their sentiments
       if tweets and tweets?.length > 0
-        async.eachLimit tweets, 10, getSentiment, (err) ->
+        async.eachLimit tweets, 500, getSentiment, (err) ->
           next null, tweets
       else
         next null, []
