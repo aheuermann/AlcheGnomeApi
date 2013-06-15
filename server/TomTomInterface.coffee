@@ -21,6 +21,5 @@ getCityLocation: (place, callback) ->
           callback undefined, obj if callback #assuming 'obj' is {lat: , lon}
         else 
           callback "Error: TomTom error #{res.statusCode}", undefined if callback
-
-
-  callaback location if callback
+module.exports =
+  getCityLocation: getCityLocation
