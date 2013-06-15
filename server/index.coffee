@@ -49,10 +49,11 @@ getTweets = (method, q, callback) ->
         all = all.splice 0, MAX_TWEETS
 
       console.log "Grabbed: #{all.length}"
-      
       callback err, _.map(all, (t) -> 
-        t = _.pick t, ['text', 'id', 'user']
-        #t.count = ++i
+        user = t.user
+        t = _.pick t, ['text', 'id', 'created_at', 'retweet_count', 'favorite_count']
+        t.user = {}
+        t.user = _.extend t.user, _.pick(user, ['profile_image_url', 'screen_name', 'name', 'location'])
         t
       ) 
   )
