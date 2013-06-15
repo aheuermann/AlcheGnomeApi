@@ -15,6 +15,9 @@ T = new Twit {
 
 alchemy = new AlchemyAPI('8da86f0a977a22e600739f6f693b39fddefbd503')
 
+MAX_TWEETS = 320
+
+
 getSentiment = (tweet, done) ->
   if tweet?.text
     alchemy.sentiment tweet.text, {}, (err, response) ->
@@ -23,7 +26,7 @@ getSentiment = (tweet, done) ->
   else 
     done()
 
-getTweets = (q, callback) ->
+getTweets = (method, q, callback) ->
   all = []
   count = 4
   q.count = 100
@@ -31,7 +34,7 @@ getTweets = (q, callback) ->
     -> count > 0
     (done) ->
       console.log "Twitter loop iteration #{count}"
-      T.get 'statuses/user_timeline', q, (err, tweets) ->
+      T.get method, q, (err, tweets) ->
         if tweets and tweets.length > 0
           all = all.concat(tweets)
           q.max_id = _.last(tweets).id if tweets
@@ -41,8 +44,12 @@ getTweets = (q, callback) ->
 
         done(err)
     (err) ->
-      console.log "Grabbed: #{all.length}"
       #i = 0;
+      if all.length > MAX_TWEETS
+        all = all.splice 0, MAX_TWEETS
+
+      console.log "Grabbed: #{all.length}"
+      
       callback err, _.map(all, (t) -> 
         t = _.pick t, ['text', 'id', 'user']
         #t.count = ++i
@@ -51,13 +58,12 @@ getTweets = (q, callback) ->
   )
 
 app.get '/api/:user', (req, res) ->
-  
   q = 
     screen_name: req.params.user
   
   async.waterfall [
     (next) -> #get all the tweets
-      getTweets q, next
+      getTweets 'statuses/user_timeline', q, next
     (tweets, next) -> #get their sentiments
       if tweets and tweets?.length > 0
         async.eachLimit tweets, 500, getSentiment, (err) ->
