@@ -67,3 +67,7 @@ app.get '/api/:user', (req, res) ->
 port = process?.env?.PORT || 3000
 app.listen port
 console.log "listening #{port}"
+
+module.exports =
+  getTweets: getTweets
+  getSentiment: getSentiment

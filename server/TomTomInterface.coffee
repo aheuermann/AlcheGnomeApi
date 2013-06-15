@@ -13,13 +13,20 @@ getCityLocation: (place, callback) ->
 
     queryString = "?language=en&L=#{city}&AA=#{state}$key=#{apiKey}"
     client = restify.createClient
-      url: url      
+      url: url
+      headers:
+        'Content-Type' : 'application/json'      
 
     client.get uri + queryString, (err, req, res, obj) ->
       req.on "response", (err, res) ->
         if res.statusCode is 200
-          callback undefined, obj if callback #assuming 'obj' is {lat: , lon}
+          resObj =
+            lat: response.geoResponse.geoResult.latitude
+            lon: response.geoResponse.geoResult.longitude
+
+          callback undefined, resObj if callback #assuming 'obj' is {lat: , lon}
         else 
           callback "Error: TomTom error #{res.statusCode}", undefined if callback
+          
 module.exports =
   getCityLocation: getCityLocation
