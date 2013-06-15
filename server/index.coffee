@@ -35,6 +35,7 @@ getTweets = (method, q, callback) ->
     (done) ->
       console.log "Twitter loop iteration #{count}"
       T.get method, q, (err, tweets) ->
+        tweets = tweets.statuses if tweets.statuses
         if tweets and tweets.length > 0
           all = all.concat(tweets)
           q.max_id = _.last(tweets).id if tweets
@@ -58,13 +59,10 @@ getTweets = (method, q, callback) ->
       ) 
   )
 
-app.get '/api/:user', (req, res) ->
-  q = 
-    screen_name: req.params.user
-  
+doWork = (method, q, res) ->
   async.waterfall [
     (next) -> #get all the tweets
-      getTweets 'statuses/user_timeline', q, next
+      getTweets method, q, next
     (tweets, next) -> #get their sentiments
       if tweets and tweets?.length > 0
         async.eachLimit tweets, 500, getSentiment, (err) ->
@@ -77,10 +75,18 @@ app.get '/api/:user', (req, res) ->
       else
         res.send "No tweets for \"#{req.params.user}\""
 
+app.get '/api/user/:user', (req, res) ->
+  q = 
+    screen_name: req.params.user
+  doWork 'statuses/user_timeline', q, res
+
+app.get '/api/search', (req, res) ->
+  doWork 'search/tweets', req.query, res
+
 port = process?.env?.PORT || 3000
 app.listen port
 console.log "listening #{port}"
 
-module.exports =
-  getTweets: getTweets
-  getSentiment: getSentiment
+#module.exports =
+#  getTweets: getTweets
+#  getSentiment: getSentiment
