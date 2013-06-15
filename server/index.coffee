@@ -54,7 +54,7 @@ app.get '/api/:user', (req, res) ->
       getTweets q, next
     (tweets, next) -> #get their sentiments
       if tweets and tweets?.length > 0
-        async.eachLimit tweets, 1, getSentiment, (err) ->
+        async.eachLimit tweets, 10, getSentiment, (err) ->
           next null, tweets
       else
         next null, []
