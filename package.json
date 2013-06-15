@@ -7,7 +7,8 @@
     "underscore": "~1.4.4",
     "twit": "~1.1.6",
     "alchemy-api": "~0.9.0",
-    "coffee-script": "~1.6.3"
+    "coffee-script": "~1.6.3",
+    "node_klout": "~0.2.3"
   },
   "devDependencies": {
     "coffee-script": "~1.6.2"
