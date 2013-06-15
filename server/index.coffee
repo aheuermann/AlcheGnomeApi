@@ -25,7 +25,7 @@ getSentiment = (tweet, done) ->
 
 getTweets = (q, callback) ->
   all = []
-  count = 6
+  count = 4
   q.count = 100
   async.whilst( 
     -> count > 0
