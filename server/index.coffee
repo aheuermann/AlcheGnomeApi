@@ -44,7 +44,7 @@ getTweets = (q, callback) ->
       console.log "Grabbed: #{all.length}"
       #i = 0;
       callback err, _.map(all, (t) -> 
-        t = _.pick t, ['text', 'id']
+        t = _.pick t, ['text', 'id', 'user']
         #t.count = ++i
         t
       ) 
