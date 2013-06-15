@@ -19,7 +19,7 @@ getSentiment = (tweet, done) ->
   if tweet?.text
     alchemy.sentiment tweet.text, {}, (err, response) ->
       tweet.sentiment = response.docSentiment
-      done()
+      done(err)
   else 
     done()
 
