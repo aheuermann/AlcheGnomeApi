@@ -1,7 +1,7 @@
 AlchemyAPI = require 'alchemy-api'
 alchemy = new AlchemyAPI('8da86f0a977a22e600739f6f693b39fddefbd503')
 
-cache = require './redisVanguard'
+cache = require './RedisVanguard'
 
 #redis = require 'redis'
 #cache = redis.createClient() 
