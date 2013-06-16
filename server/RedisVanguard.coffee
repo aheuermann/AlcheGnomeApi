@@ -20,17 +20,16 @@ class RedisVanguard
     @client = getConnection redis
 
   set: (key, value) ->
-    console.log "set:#{key}--#{value}" if _.isObject value
-    @client.set key, value
+    #console.log "set:#{key}--#{value}"
+    @client.set key, JSON.stringify({a:value})
   
   get: (key, callback) ->
     @client.get key, (err, result) ->
       if err
         callback err
       else
-        console.log "get:#{key}--#{result}"
-        #result = JSON.parse(result) if result
+        #console.log "get:#{key}--#{result}"
+        result = JSON.parse(result).a if result
         callback null, result
-
 
 module.exports = new RedisVanguard()
