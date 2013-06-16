@@ -1,9 +1,9 @@
 Twit = require 'twit'
-AlchemyAPI = require('alchemy-api')
+AlchemyAPI = require 'alchemy-api'
+Klout = require './KloutInterface'
 async = require 'async'
 _ = require 'underscore'
 express = require 'express'
-
 app = express()
 
 T = new Twit {
@@ -16,7 +16,6 @@ T = new Twit {
 alchemy = new AlchemyAPI('8da86f0a977a22e600739f6f693b39fddefbd503')
 
 MAX_TWEETS = 320
-
 
 getSentiment = (tweet, done) ->
   if tweet?.text
@@ -35,7 +34,7 @@ getTweets = (method, q, callback) ->
     (done) ->
       console.log "Twitter loop iteration #{count}"
       T.get method, q, (err, tweets) ->
-        tweets = tweets.statuses if tweets.statuses
+        tweets = tweets.statuses if tweets?.statuses
         if tweets and tweets.length > 0
           all = all.concat(tweets)
           q.max_id = _.last(tweets).id if tweets
@@ -50,6 +49,7 @@ getTweets = (method, q, callback) ->
         all = all.splice 0, MAX_TWEETS
 
       console.log "Grabbed: #{all.length}"
+      
       callback err, _.map(all, (t) -> 
         user = t.user
         t = _.pick t, ['text', 'id', 'created_at', 'retweet_count', 'favorite_count']
@@ -59,21 +59,31 @@ getTweets = (method, q, callback) ->
       ) 
   )
 
+getKloutScore = (tweet, done) ->
+  Klout.getKloutScore tweet.user.screen_name, (err, score) ->
+    tweet.klout_score = score
+    done err, tweet
+
 doWork = (method, q, res) ->
   async.waterfall [
     (next) -> #get all the tweets
       getTweets method, q, next
     (tweets, next) -> #get their sentiments
       if tweets and tweets?.length > 0
-        async.eachLimit tweets, 500, getSentiment, (err) ->
+        async.parallel [
+          (done) ->
+            async.eachLimit tweets, 1, getKloutScore, (err) ->
+              done err
+          (done) ->
+            async.eachLimit tweets, 500, getSentiment, (err) ->
+              done err
+        ], (err) ->
           next null, tweets
       else
         next null, []
     ], (err, results) ->
-      if results
-        res.send results
-      else
-        res.send "No tweets for \"#{req.params.user}\""
+      console.log err if err
+      res.send results || []
 
 app.get '/api/user/:user', (req, res) ->
   q = 
