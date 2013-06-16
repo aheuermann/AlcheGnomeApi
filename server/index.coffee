@@ -44,7 +44,6 @@ getTweets = (method, q, callback) ->
 
         done(err)
     (err) ->
-      #i = 0;
       if all.length > MAX_TWEETS
         all = all.splice 0, MAX_TWEETS
 
@@ -91,7 +90,12 @@ app.get '/api/user/:user', (req, res) ->
   doWork 'statuses/user_timeline', q, res
 
 app.get '/api/search', (req, res) ->
-  doWork 'search/tweets', req.query, res
+  if req.query.q[0] is '@'
+    q = 
+      screen_name: req.query.q
+    doWork 'statuses/user_timeline', q, res
+  else
+    doWork 'search/tweets', req.query, res
 
 port = process?.env?.PORT || 3000
 app.listen port
