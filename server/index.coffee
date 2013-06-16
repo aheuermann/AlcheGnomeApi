@@ -1,4 +1,4 @@
-AlchemyAPI = require 'alchemy-api'
+Alchemy = require './Alchemy'
 Klout = require './Klout'
 Twitter = require './Twitter'
 async = require 'async'
@@ -7,16 +7,6 @@ _ = require 'underscore'
 express = require 'express'
 app = express()
 
-alchemy = new AlchemyAPI('8da86f0a977a22e600739f6f693b39fddefbd503')
-
-
-getSentiment = (tweet, done) ->
-  if tweet?.text
-    alchemy.sentiment tweet.text, {}, (err, response) ->
-      tweet.sentiment = response.docSentiment
-      done(err)
-  else 
-    done()
 
 getKloutScore = (tweet, done) ->
   Klout.getKloutScore tweet.user.screen_name, (err, score) ->
@@ -34,7 +24,7 @@ doWork = (method, q, res) ->
             async.eachLimit tweets, 1, getKloutScore, (err) ->
               done err
           (done) ->
-            async.eachLimit tweets, 500, getSentiment, (err) ->
+            async.eachLimit tweets, 500, Alchemy.getSentiment, (err) ->
               done err
         ], (err) ->
           next null, tweets
@@ -60,7 +50,3 @@ app.get '/api/search', (req, res) ->
 port = process?.env?.PORT || 3000
 app.listen port
 console.log "listening #{port}"
-
-#module.exports =
-#  getTweets: getTweets
-#  getSentiment: getSentiment

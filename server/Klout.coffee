@@ -1,4 +1,3 @@
-express = require "express"
 Klout = require "node_klout"
 
 klout = new Klout("5u7zsbnt6mbme9zn395nygem", "json", "v2")
