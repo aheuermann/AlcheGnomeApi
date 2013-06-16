@@ -14,43 +14,39 @@ getKloutScore = (tweet, done) ->
     tweet.klout_score = score
     done err, tweet
 
-doWork = (method, q, res) ->
-  async.waterfall [
-    (next) -> #get all the tweets
-      Twitter.getTweets method, q, next
-    (tweets, next) -> #get their sentiments
-      if tweets and tweets?.length > 0
-        async.parallel [
-          (done) ->
-            async.eachLimit tweets, 1, getKloutScore, (err) ->
-              done err
-          (done) ->
-            async.eachLimit tweets, 500, Alchemy.getSentiment, (err) ->
-              done err
-        ], (err) ->
-          next null, tweets
-      else
-        next null, []
-    ], (err, results) ->
+getTweets: ->
+
+doWork = (type, messages, res) ->
+  if messages and messages?.length > 0
+    async.parallel [
+      (done) ->
+        if type is 'tweet'
+          async.eachLimit messages, 1, getKloutScore, (err) ->
+            done err
+        else done(null)
+      (done) ->
+        async.eachLimit messages, 500, Alchemy.getSentiment, (err) ->
+          done err
+    ], (err) ->
       console.log err if err
-      res.send results || []
+      res.send messages || []
 
 app.get '/api/user/:user', (req, res) ->
-  q = 
-    screen_name: req.params.user
-  doWork 'statuses/user_timeline', q, res
+  Twitter.getTweets 'statuses/user_timeline', {screen_name: req.params.user}, (err, tweets) ->
+    doWork 'tweet', tweets, res
 
 app.get '/api/search', (req, res) ->
-  if req.query.q[0] is '@'
-    q = 
-      screen_name: req.query.q
-    doWork 'statuses/user_timeline', q, res
+  method = q = null
+  if req.query.q?[0] is '@'
+    Twitter.getTweets 'statuses/user_timeline', {screen_name: req.query.q}, (err, tweets) ->
+      doWork 'tweet', tweets, res
   else
-    doWork 'search/tweets', req.query, res
+    Twitter.getTweets 'search/tweets', req.query, (err, tweets) ->
+      doWork 'tweet', tweets, res
 
 app.get '/api/email', (req, res) ->
   ContextIO.getMessages (err, messages) ->
-    res.send messages
+    doWork 'message', messages, res
 
 port = process?.env?.PORT || 3000
 app.listen port

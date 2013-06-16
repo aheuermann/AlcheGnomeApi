@@ -38,6 +38,7 @@ getTweets = (method, q, callback) ->
       callback err, _.map(all, (t) -> 
         user = t.user
         t = _.pick t, ['text', 'id', 'created_at', 'retweet_count', 'favorite_count']
+        t.id = "t:#{t.id}"
         t.user = {}
         t.user = _.extend t.user, _.pick(user, ['profile_image_url', 'screen_name', 'name', 'location'])
         t
