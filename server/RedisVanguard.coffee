@@ -1,14 +1,12 @@
-redis = require 'redis'
-url = require("url")
 
 getConnection = (redis) ->
   client = client || redis.createClient() 
   console.log "Redisurl:#{process.env.REDISCLOUD_URL}"
-  if process.env.REDISCLOUD_URL
+  if process.env.REDISTOGO_URL
     console.log "using redis cloud"
-    redisURL = url.parse(process.env.REDISCLOUD_URL)
+    redisURL = require("url")..parse(process.env.REDISTOGO_URL)
     console.log JSON.stringify(redisURL)
-    client = redis.createClient(redisURL.port, redisURL.hostname, {})
+    client = require('redis').createClient(redisURL.port, redisURL.hostname)
     client.auth(redisURL.auth.split(":")[1])
     return c
   else
