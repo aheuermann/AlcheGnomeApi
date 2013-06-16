@@ -7,6 +7,7 @@ getConnection = (redis) ->
   if process.env.REDISCLOUD_URL
     console.log "using redis cloud"
     redisURL = url.parse(process.env.REDISCLOUD_URL)
+    console.log JSON.stringify(redisURL)
     client = redis.createClient(redisURL.port, redisURL.hostname, {no_ready_check: true})
     client.auth(redisURL.auth.split(":")[1])
     return c
