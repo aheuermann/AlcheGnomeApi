@@ -21,7 +21,8 @@ class RedisVanguard
 
   set: (key, value) ->
     #console.log "set:#{key}--#{value}"
-    @client.setex 2700, key, JSON.stringify({a:value})
+    #@client.setex 2700, key, JSON.stringify({a:value})
+    @client.set key, JSON.stringify({a:value})
   
   get: (key, callback) ->
     @client.get key, (err, result) ->
