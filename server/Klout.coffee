@@ -19,14 +19,14 @@ getKloutScore= (username, callback) ->
           if err
             console.log "KloutError: #{JSON.stringify(err)}"
             score = Math.floor(Math.random()*80)
-            cache.set(key, score) if res.score
+            cache.set(key, score) if score
             callback(null, score) if callback
           else
             klout.getUserScore kloutUser.id, (err, res) ->
               if err
                 console.log "Klout: #{JSON.stringify(err)}"
                 score = Math.floor(Math.random()*80)
-                cache.set(key, score) if res.score
+                cache.set(key, score) if score
                 callback(null, score) if callback
               else
                 #console.log "#{username} -> #{JSON.stringify(res.score)}"
