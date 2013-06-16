@@ -1,6 +1,7 @@
 Alchemy = require './Alchemy'
 Klout = require './Klout'
 Twitter = require './Twitter'
+ContextIO = require './ContextIO'
 async = require 'async'
 _ = require 'underscore'
 
@@ -46,6 +47,10 @@ app.get '/api/search', (req, res) ->
     doWork 'statuses/user_timeline', q, res
   else
     doWork 'search/tweets', req.query, res
+
+app.get '/api/email', (req, res) ->
+  ContextIO.getMessages (err, messages) ->
+    res.send messages
 
 port = process?.env?.PORT || 3000
 app.listen port
