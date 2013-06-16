@@ -1,5 +1,5 @@
 AlchemyAPI = require 'alchemy-api'
-Klout = require './KloutInterface'
+Klout = require './Klout'
 Twitter = require './Twitter'
 async = require 'async'
 _ = require 'underscore'
