@@ -27,6 +27,7 @@ getTweets = (method, q, callback) ->
         (done) ->
           console.log "Twitter loop iteration #{count}"
           T.get method, q, (err, tweets) ->
+            console.log "TwitterErr: #{JSON.stringify(err)}"if err
             tweets = tweets.statuses if tweets?.statuses
             if tweets and tweets.length > 0
               all = all.concat(tweets)
@@ -48,7 +49,7 @@ getTweets = (method, q, callback) ->
             t.id = "t:#{t.id}"
             t.user = {}
             t.user = _.extend t.user, _.pick(user, ['profile_image_url', 'screen_name', 'name', 'location'])
-            t.alchemytext = t.text
+            t.alchemyText = t.text
             t
           )
           

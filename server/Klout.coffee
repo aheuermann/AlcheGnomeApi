@@ -16,10 +16,15 @@ getKloutScore= (username, callback) ->
       else
         #console.log "u:#{username}"
         klout.getKloutIdentity username, (err, kloutUser) ->
-          klout.getUserScore kloutUser.id, (err, res) ->
-            #console.log "#{username} -> #{JSON.stringify(res.score)}"
-            cache.set(key, res.score) if res.score
-            callback(err, res.score) if callback
+          if err
+            console.log "KloutError: #{JSON.stringify(err)}" 
+            callback(err, 52) if callback
+          else
+            klout.getUserScore kloutUser.id, (err, res) ->
+              console.log "Klout: #{JSON.stringify(err)}" if err
+              #console.log "#{username} -> #{JSON.stringify(res.score)}"
+              cache.set(key, res.score) if res.score
+              callback(err, res.score) if callback
 
 module.exports =
   getKloutScore: getKloutScore
