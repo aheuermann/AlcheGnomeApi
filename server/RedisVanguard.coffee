@@ -19,7 +19,7 @@ class RedisVanguard
     @client = getConnection redis
 
   set: (key, value) ->
-    #console.log "set:#{key}--#{value}"
+    console.log "set:#{key}--#{value}" if _.isObject value
     @client.set key, value
   
   get: (key, callback) ->
@@ -27,7 +27,7 @@ class RedisVanguard
       if err
         callback err
       else
-        #console.log "get:#{key}--#{result}"
+        console.log "get:#{key}--#{result}"
         #result = JSON.parse(result) if result
         callback null, result
 
