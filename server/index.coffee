@@ -31,18 +31,19 @@ doWork = (type, messages, res) ->
       console.log err if err
       res.send messages || []
 
-app.get '/api/user/:user', (req, res) ->
-  Twitter.getTweets 'statuses/user_timeline', {screen_name: req.params.user}, (err, tweets) ->
+doTwitter = (method, q, res) ->
+  Twitter.getTweets method, q, (err, tweets) ->
     doWork 'tweet', tweets, res
+
+app.get '/api/user/:user', (req, res) ->
+  doTwitter 'statuses/user_timeline', {screen_name: req.params.user}, res
 
 app.get '/api/search', (req, res) ->
   method = q = null
   if req.query.q?[0] is '@'
-    Twitter.getTweets 'statuses/user_timeline', {screen_name: req.query.q}, (err, tweets) ->
-      doWork 'tweet', tweets, res
+    doTwitter 'statuses/user_timeline', {screen_name: req.query.q}, res
   else
-    Twitter.getTweets 'search/tweets', req.query, (err, tweets) ->
-      doWork 'tweet', tweets, res
+    doTwitter 'search/tweets', req.query, res
 
 app.get '/api/email', (req, res) ->
   ContextIO.getMessages (err, messages) ->
