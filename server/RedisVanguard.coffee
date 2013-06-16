@@ -1,5 +1,6 @@
 redis = require 'redis'
 url = require("url")
+_ = require 'underscore'
 
 getConnection = (redis) ->
   console.log "Redisurl:#{process.env.REDISCLOUD_URL}"
