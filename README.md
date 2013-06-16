@@ -10,22 +10,17 @@ This is the backend of the MooD iPad app created for the 2013 Hack the Midwest h
 
 ## The App
 
-### Demo
-
-* [https://vine.co/v/hBJujgiTee9]()
-* [http://www.youtube.com/watch?v=7UlWkKn6TZ4]()
-
-### The Code
-* [https://github.com/edge13/alchegnome]()
-
+* [Demo 1](https://vine.co/v/hBJujgiTee9)
+* [Demo 2](http://www.youtube.com/watch?v=7UlWkKn6TZ4)
+* [The Code](https://github.com/edge13/alchegnome)
 
 ## Built in 24 hours by
 
-* [Adam Chura](http://twitter.com/adamchura) [http://github.com/achura]()
-* [Andrew Heuermann](http://twitter.com/aheuermann) [http://github.com/aheuermann]()
-* [Arynn Nease](http://twitter.com/ArynnNease) [http://github.com/ArynnNease]()
-* [Joel Angelone](http://twitter.com/joelangelone) [http://github.com/edge13]()
-* [Luke Babb](http://twitter.com/lukebabb) [http://github.com/lukebabb]()
+* Adam Chura [Twitter](http://twitter.com/adamchura) [Github](http://github.com/achura)
+* Andrew Heuermann [Twitter](http://twitter.com/aheuermann) [Github](http://github.com/aheuermann)
+* Arynn Nease [Twitter](http://twitter.com/ArynnNease) [Github](http://github.com/ArynnNease)
+* Joel Angelone [Twitter](http://twitter.com/joelangelone) [Github](http://github.com/edge13)
+* Luke Babb [Twitter](http://twitter.com/lukebabb) [Github]([http://github.com/lukebabb])
 
 
 
