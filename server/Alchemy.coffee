@@ -7,7 +7,7 @@ getSentiment = (message, done) ->
   key = "alchemy:#{message.id}"
   cache.get key, (err, result) ->
     if result
-      console.log "cached"
+      #console.log "cached"
       message.sentiment = result
       done()
     else if message?.text
