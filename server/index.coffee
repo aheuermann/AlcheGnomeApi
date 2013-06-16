@@ -14,8 +14,6 @@ getKloutScore = (tweet, done) ->
     tweet.klout_score = score
     done err, tweet
 
-getTweets: ->
-
 doWork = (type, messages, res) ->
   if messages and messages?.length > 0
     async.parallel [

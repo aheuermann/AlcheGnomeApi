@@ -10,7 +10,8 @@
     "coffee-script": "~1.6.3",
     "node_klout": "~0.2.3",
     "restify": "~2.6.0",
-    "contextio": "~0.3.0"
+    "contextio": "~0.3.0",
+    "redis": "~0.8.3"
   },
   "devDependencies": {
     "coffee-script": "~1.6.2"
