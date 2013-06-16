@@ -10,8 +10,8 @@ getSentiment = (message, done) ->
     done()
   else if message?.text
     alchemy.sentiment message.text, {}, (err, response) ->
-      message.sentiment = response.docSentiment
-      cache[message.id] = message.sentiment
+      message.sentiment = response?.docSentiment
+      cache[message.id] = message.sentiment if message.sentiment
       done(err)
   else 
     done()
