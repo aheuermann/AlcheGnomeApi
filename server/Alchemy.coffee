@@ -10,8 +10,8 @@ getSentiment = (message, done) ->
       #console.log "cached"
       message.sentiment = result
       done()
-    else if message?.text
-      alchemy.sentiment message.text, {}, (err, response) ->
+    else if message?.alchemyText
+      alchemy.sentiment message.alchemyText, {}, (err, response) ->
         message.sentiment = response?.docSentiment
         cache.set(key, message.sentiment) if message.sentiment
         done(err)

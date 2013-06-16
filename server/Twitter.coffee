@@ -48,6 +48,7 @@ getTweets = (method, q, callback) ->
             t.id = "t:#{t.id}"
             t.user = {}
             t.user = _.extend t.user, _.pick(user, ['profile_image_url', 'screen_name', 'name', 'location'])
+            t.alchemytext = t.text
             t
           )
           
