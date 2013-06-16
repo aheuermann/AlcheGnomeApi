@@ -3,9 +3,6 @@ alchemy = new AlchemyAPI('8da86f0a977a22e600739f6f693b39fddefbd503')
 
 cache = require './RedisVanguard'
 
-#redis = require 'redis'
-#cache = redis.createClient() 
-
 getSentiment = (message, done) ->
   key = "alchemy:#{message.id}"
   cache.get key, (err, result) ->
