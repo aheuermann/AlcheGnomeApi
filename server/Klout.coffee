@@ -1,6 +1,6 @@
 Klout = require "node_klout"
 
-klout = new Klout("5u7zsbnt6mbme9zn395nygem", "json", "v2")
+klout = new Klout("fkysp67c8py9c84abgfbrqt7", "json", "v2")
 
 cache = require './RedisVanguard'
 
@@ -17,14 +17,17 @@ getKloutScore= (username, callback) ->
         #console.log "u:#{username}"
         klout.getKloutIdentity username, (err, kloutUser) ->
           if err
-            console.log "KloutError: #{JSON.stringify(err)}" 
-            callback(err, 52) if callback
+            console.log "KloutError: #{JSON.stringify(err)}"
+            callback(err, Math.floor(Math.random()*80)) if callback
           else
             klout.getUserScore kloutUser.id, (err, res) ->
-              console.log "Klout: #{JSON.stringify(err)}" if err
-              #console.log "#{username} -> #{JSON.stringify(res.score)}"
-              cache.set(key, res.score) if res.score
-              callback(err, res.score) if callback
+              if err
+                console.log "Klout: #{JSON.stringify(err)}"
+                callback(err, Math.floor(Math.random()*80)) if callback
+              else
+                #console.log "#{username} -> #{JSON.stringify(res.score)}"
+                cache.set(key, res.score) if res.score
+                callback(err, res.score) if callback
 
 module.exports =
   getKloutScore: getKloutScore
